@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  jobe:
+    build:
+	  context: .
+      dockerfile: Dockerfile
+    ports:
+      - 4000:80
+    volumes:
+      - mysqlVolume:/var/lib/mysql
+    image: tadson10/jobe_server:latest
+volumes:
+  mysqlVolume: {}
