@@ -1,4 +1,5 @@
-# Jobe-in-a-box: a Dockerised Jobe server (see https://github.com/trampgeek/jobe)
+# Jobe-in-Docker: a Dockerised Jobe server (see https://github.com/tadson10/jobe)
+# Original repository is found on https://github.com/trampgeek/jobe
 # With thanks to David Bowes (d.h.bowes@herts.ac.uk) who did all the hard work
 # on this originally.
 
@@ -53,9 +54,18 @@ RUN ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime && \
   tzdata \
   mysql-server \
   php-mysql \
+  curl \
+  php-xml \
+  systemd \
+  npm \
   unzip && \
+  npm install -g express-generator && \
+  npm install express && \
+  systemctl enable mysql && \
   python3 -m pip install pylint && \
   pylint --reports=no --score=n --generate-rcfile > /etc/pylintrc && \
+  /usr/bin/curl -sS https://getcomposer.org/installer | php && \
+  mv composer.phar /usr/local/bin/composer && \
   ln -sf /proc/self/fd/1 /var/log/apache2/access.log && \
   ln -sf /proc/self/fd/1 /var/log/apache2/error.log && \
   sed -i -e "s/export LANG=C/export LANG=$LANG/" /etc/apache2/envvars && \
@@ -68,7 +78,7 @@ RUN ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime && \
   echo "Jobe" > /var/www/html/index.html && \
   git clone https://github.com/tadson10/jobe /var/www/html/jobe && \
   sudo service apache2 start && \
-  cd /var/www/html/jobe && sudo ./install && \
+  cd /var/www/html/jobe && sudo ./install && composer require zircote/swagger-php && \
   chown -R www-data:www-data /var/www/html && \
   apt-get -y autoremove --purge && \
   apt-get -y clean && \
@@ -77,9 +87,9 @@ RUN ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime && \
 
 # Expose apache
 EXPOSE 80
-
-# Healthcheck, minimaltest.py should complete within 2 seconds
-#HEALTHCHECK --interval=5m --timeout=2s \    CMD /usr/bin/python3 /var/www/html/jobe/minimaltest.py || exit 1
+# Expose JOBE ports
+EXPOSE 3000-3100
 
 # Start apache and mysql server
 CMD ["sh", "/start.sh"]
+

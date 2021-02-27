@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo usermod -d /var/lib/mysql/ mysql
-sudo /etc/init.d/mysql start
-sudo php /mysql.php $1
+usermod -d /var/lib/mysql/ mysql
+/etc/init.d/mysql start
+php /mysql.php
 /usr/sbin/apache2ctl -D FOREGROUND
