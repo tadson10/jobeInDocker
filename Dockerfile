@@ -7,7 +7,7 @@ FROM ubuntu:20.04
 
 LABEL maintainers="ts6103@student.uni-lj.si"
 ARG TZ=Europe/Ljubljana
-ENV ROOTPASS=jobeServerUniLj
+ARG ROOTPASS=jobeServerUniLj
 # Set up the (apache) environment variables
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
