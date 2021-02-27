@@ -8,6 +8,10 @@ FROM ubuntu:20.04
 LABEL maintainers="ts6103@student.uni-lj.si"
 ARG TZ=Europe/Ljubljana
 ARG ROOTPASS=jobeServerUniLj
+ARG MYSQLUSER=jobe
+ARG MYSQLPASS=jobePass10!
+ENV ENVMYSQLUSER=$MYSQLUSER
+ENV ENVMYSQLPASS=$MYSQLPASS
 # Set up the (apache) environment variables
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
@@ -80,6 +84,7 @@ RUN ln -snf /usr/share/zoneinfo/"$TZ" /etc/localtime && \
   sudo service apache2 start && \
   cd /var/www/html/jobe && sudo ./install && composer require zircote/swagger-php && \
   chown -R www-data:www-data /var/www/html && \
+  chmod +x /start.sh && \
   apt-get -y autoremove --purge && \
   apt-get -y clean && \
   rm -rf /var/lib/apt/lists/*
@@ -91,5 +96,5 @@ EXPOSE 80
 EXPOSE 3000-3100
 
 # Start apache and mysql server
-CMD ["sh", "/start.sh"]
+CMD /start.sh $ENVMYSQLUSER $ENVMYSQLPASS
 

@@ -1,4 +1,7 @@
 <?php
+$user = $argv[1];
+$pass = $argv[2];
+
 $mysqli = new mysqli("localhost", "root");
 
 // Check connection
@@ -11,7 +14,7 @@ if ($mysqli->connect_errno) {
 $mysqli->query("CREATE DATABASE IF NOT EXISTS jobe");
 
 // create user
-$mysqli->query("CREATE USER IF NOT EXISTS 'jobe'@'localhost'IDENTIFIED BY 'jobePass10!'");
+$mysqli->query("CREATE USER IF NOT EXISTS '$user'@'localhost'IDENTIFIED BY '$pass'");
 $mysqli->query("GRANT ALL PRIVILEGES ON jobe.* TO 'jobe'@'localhost'");
 
 $mysqli->query("use jobe");
